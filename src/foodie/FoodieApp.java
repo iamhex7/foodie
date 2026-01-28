@@ -15,14 +15,63 @@ public class FoodieApp {
         String defaultCsv = "C:\\\\Users\\\\Hex\\\\OneDrive\\\\foodie\\\\menuaug.csv";
         String csvPath = (args.length > 0) ? args[0] : defaultCsv;
 
-        List<Menu> menus = DataLoader.loadMenusFromCSV(csvPath);
-
-        // 用户输入
         Scanner sc = new Scanner(System.in);
-        System.out.println("Terminal: What do you have today?");
-        String input = sc.nextLine();
+        
+        // Menu: Add or Search?
+        System.out.println("═══════════════════════════════════");
+        System.out.println("       Welcome to Foodie! 🍕");
+        System.out.println("═══════════════════════════════════");
+        System.out.println("What would you like to do?");
+        System.out.println("  (A)dd a new recipe");
+        System.out.println("  (S)earch for dishes to cook");
+        System.out.print("Enter your choice (A/S): ");
+        String choice = sc.nextLine().trim().toUpperCase();
+        
+        if (choice.equals("A")) {
+            addNewRecipe(sc, csvPath);
+        } else if (choice.equals("S")) {
+            searchRecipes(sc, csvPath);
+        } else {
+            System.out.println("Invalid choice. Exiting.");
+        }
+        
         sc.close();
-
+    }
+    
+    private static void addNewRecipe(Scanner sc, String csvPath) throws Exception {
+        System.out.println("\n─ Add New Recipe ─");
+        
+        System.out.print("Enter recipe name: ");
+        String name = sc.nextLine().trim();
+        if (name.isEmpty()) {
+            System.out.println("Recipe name cannot be empty. Aborting.");
+            return;
+        }
+        
+        System.out.print("Enter recipe URL: ");
+        String url = sc.nextLine().trim();
+        
+        System.out.print("Enter ingredients (comma-separated, e.g., beef,onion,potato): ");
+        String ingredients = sc.nextLine().trim();
+        if (ingredients.isEmpty()) {
+            System.out.println("Ingredients cannot be empty. Aborting.");
+            return;
+        }
+        
+        try {
+            DataLoader.saveRecipeToCSV(csvPath, name, url, ingredients);
+            System.out.println("\n✓ Recipe '" + name + "' added successfully!");
+        } catch (Exception e) {
+            System.out.println("\n✗ Error adding recipe: " + e.getMessage());
+        }
+    }
+    
+    private static void searchRecipes(Scanner sc, String csvPath) throws Exception {
+        List<Menu> menus = DataLoader.loadMenusFromCSV(csvPath);
+        
+        System.out.println("\nWhat do you have today?");
+        String input = sc.nextLine();
+        
         // 规范化：小写 + 下划线
         HashSet<String> mySet = new HashSet<>();
         for (String token : input.trim().split("\\s+")) {

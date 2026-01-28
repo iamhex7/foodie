@@ -125,11 +125,15 @@ public class FoodieGUI extends JFrame {
             resultsPanel.repaint();
             statusLabel.setText("Enter ingredients and click Search");
         });
+
+        JButton addRecipeButton = createOrangeButton("+ Add Recipe");
+        addRecipeButton.addActionListener(e -> openAddRecipeDialog());
         
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(searchButton);
         buttonPanel.add(clearButton);
+        buttonPanel.add(addRecipeButton);
         
         JPanel inputContent = new JPanel(new BorderLayout(10, 0));
         inputContent.setBackground(Color.WHITE);
@@ -370,6 +374,30 @@ public class FoodieGUI extends JFrame {
     private void showRecipeDetails(Menu menu, Set<String> mySet) {
         RecipeDetailsDialog dialog = new RecipeDetailsDialog(this, menu, mySet);
         dialog.setVisible(true);
+    }
+
+    private void openAddRecipeDialog() {
+        AddRecipeDialog dialog = new AddRecipeDialog(this);
+        dialog.setVisible(true);
+        
+        if (dialog.isConfirmed()) {
+            try {
+                String name = dialog.getRecipeName();
+                String url = dialog.getRecipeUrl();
+                String ingredients = dialog.getIngredients();
+                
+                DataLoader.saveRecipeToCSV(CSV_PATH, name, url, ingredients);
+                
+                // Reload menus
+                menus = DataLoader.loadMenusFromCSV(CSV_PATH);
+                
+                statusLabel.setText("Recipe '" + name + "' added successfully!");
+                JOptionPane.showMessageDialog(this, "Recipe added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error adding recipe: " + e.getMessage(), 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
     
     private static int overlap(Menu menu, Set<String> have) {

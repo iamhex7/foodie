@@ -1,7 +1,9 @@
 package foodie;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -154,5 +156,40 @@ public class DataLoader {
         if (t.isEmpty()) return "";
         t = t.replaceAll("\\s+", "_");
         return t;
+    }
+
+    /**
+     * Save a new recipe to the CSV file
+     * @param csvPath path to the CSV file
+     * @param name recipe name
+     * @param url recipe URL
+     * @param ingredients comma-separated ingredient list
+     * @throws IOException if file operation fails
+     */
+    public static void saveRecipeToCSV(String csvPath, String name, String url, String ingredients) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath, true))) {
+            // Normalize ingredients
+            String[] parts = ingredients.split(",");
+            StringBuilder normalizedIngs = new StringBuilder();
+            for (int i = 0; i < parts.length; i++) {
+                String ing = normalizeIngredient(parts[i]);
+                if (!ing.isEmpty()) {
+                    if (i > 0 && !normalizedIngs.toString().isEmpty()) {
+                        normalizedIngs.append(",");
+                    }
+                    normalizedIngs.append(ing);
+                }
+            }
+            
+            // Escape quotes in fields
+            String escapedName = name.replace("\"", "\"\"");
+            String escapedUrl = url.replace("\"", "\"\"");
+            String escapedIngs = normalizedIngs.toString().replace("\"", "\"\"");
+            
+            // Write CSV line
+            String line = String.format("\"%s\",\"%s\",\"%s\"%n", escapedName, escapedUrl, escapedIngs);
+            bw.write(line);
+            bw.flush();
+        }
     }
 }
