@@ -17,6 +17,7 @@
     * **CLI**: A lightning-fast command-line interface for quick terminal lookups.
 
 <img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/296f2854-886b-44fd-b565-a50e1022c3d4" />
+
 * **Dynamic Recipe Management**: Add new recipes directly through the application interface; they are automatically persisted to the database.
 * **Robust CSV Engine**: Handles complex data imports including UTF-8 BOM, multiple delimiters (`,`, `;`, `\t`), and quoted strings.
 * **Deep Ingredient Mapping**: Features bi-directional mapping between ingredients and menus for optimized searching.
