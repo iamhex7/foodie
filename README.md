@@ -1,59 +1,80 @@
 # 🍕 Foodie: Smart Recipe Finder
 
-**Foodie** is a Java-based desktop application designed to solve the "what should I cook with what I have?" dilemma. By inputting the ingredients currently in your pantry, Foodie intelligently suggests recipes from your database, prioritizing matches that maximize your current supplies while minimizing extra trips to the grocery store.
+[![Java Version](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.oracle.com/java/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**Foodie** is an intelligent recipe recommendation engine designed to bridge the gap between your pantry and your plate. By inputting the ingredients you have on hand, Foodie helps you reduce food waste and discover new meals by ranking recipes based on availability and convenience.
+
+## 🌟 Key Features
+
+* **Smart Matching Logic**: Uses a multi-tier priority algorithm to ensure you find the most "cookable" meals first.
+<img width="600" height="700" alt="image" src="https://github.com/user-attachments/assets/d9d40461-d8f1-4ec4-9f5e-2b6bdd194cb5" />
+<img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/dafec884-1660-44c0-9115-9529fb753668" />
 
 
-## ✨ Key Features
+* **Dual Interface Support**:
+    * **GUI**: A modern, custom-themed Java Swing interface for visual users.
+    * **CLI**: A lightning-fast command-line interface for quick terminal lookups.
 
-* **Smart Matching Algorithm**: Recipes are ranked using a multi-tier priority system:
-    1.  **Highest Overlap**: Recipes using the most of your available ingredients come first.
-    2.  **Minimum Missing**: Among similar overlaps, recipes requiring the fewest additional items are prioritized.
-    3.  **Exact Matches**: Highlights recipes that perfectly match your ingredient list.
-* **Dual Interface**:
-    * **GUI Mode**: A modern, orange-themed Java Swing interface for a user-friendly experience.
-    * **CLI Mode**: A lightweight terminal version for quick lookups.
-* **Robust Data Loading**: Automatically parses CSV/TSV files with support for UTF-8 BOM, different delimiters, and intelligent ingredient normalization (lowercase, phrase-to-underscore conversion).
-* **Detailed Insights**: View exactly which ingredients you have and what you are missing for every recipe, with direct links to full instructions.
+<img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/296f2854-886b-44fd-b565-a50e1022c3d4" />
+* **Dynamic Recipe Management**: Add new recipes directly through the application interface; they are automatically persisted to the database.
+* **Robust CSV Engine**: Handles complex data imports including UTF-8 BOM, multiple delimiters (`,`, `;`, `\t`), and quoted strings.
+* **Deep Ingredient Mapping**: Features bi-directional mapping between ingredients and menus for optimized searching.
+
+
+## 🧠 How It Works: The Algorithm
+
+Foodie doesn't just look for keywords; it ranks results using a **Three-Tier Priority System**:
+
+1.  **Maximum Overlap**: Recipes that utilize the highest number of your current ingredients are prioritized.
+2.  **Minimum Missing**: If overlap is equal, the algorithm favors recipes requiring the fewest additional purchases.
+3.  **Exact Matches**: Perfect matches (where you have every ingredient required and nothing more) are highlighted as "Exact Matches".
 
 
 ## 🛠️ Tech Stack
 
-* **Language**: Java
-* **Framework**: Java Swing (GUI), AWT
-* **Data Format**: CSV / TSV
-* **Architecture**: Object-Oriented Design with bi-directional mapping between Recipes and Ingredients.
+* **Core Language**: Java
+* **GUI Framework**: Java Swing & AWT (featuring a custom Orange Theme)
+* **Data Structures**: 
+    * `HashSet`: For $O(1)$ ingredient matching and uniqueness.
+    * `HashMap`: To maintain global ingredient-to-menu associations.
+* **Storage**: CSV-based flat-file database.
 
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-* Java JDK 8 or higher.
-* A CSV file containing your recipe data (Columns required: `Menu_name`, `URL`, `Ingredients`).
+* **Java Development Kit (JDK) 8** or higher.
+* A CSV file named `menuaug.csv` in the project path.
 
-### Running the GUI
-1. Compile the source files.
-2. Run `FoodieGUI.java`.
-3. Enter your ingredients separated by spaces (e.g., `beef onion potato`) and hit **Search**.
+### Installation
+1.  Clone the repository:
+    ```bash
+    git clone [https://github.com/yourusername/foodie.git](https://github.com/yourusername/foodie.git)
+    ```
+2.  Navigate to the directory:
+    ```bash
+    cd foodie
+    ```
 
-### Running the CLI
-1. Run `FoodieApp.java`.
-2. Follow the terminal prompt: `Terminal: What do you have today?`.
+### Running the Application
+* **For GUI Mode**: Run `FoodieGUI.java`.
+* **For CLI Mode**: Run `FoodieApp.java`.
 
 
 ## 📊 Project Structure
 
-* `DataLoader.java`: The engine that cleans and imports recipe data.
-* `FoodieGUI.java` & `RecipeDetailsDialog.java`: The frontend components providing a rich visual experience.
-* `Menu.java` & `Ingredient.java`: Core data models handling the relationship between meals and items.
-* `FoodieApp.java`: The entry point for the command-line version.
+* `FoodieGUI.java`: The main visual window and event controller.
+* `FoodieApp.java`: Terminal-based entry point.
+* `DataLoader.java`: The I/O engine handling CSV parsing and recipe persistence.
+* `Menu.java` & `Ingredient.java`: Core data models establishing the relationship between meals and items.
+* `RecipeDetailsDialog.java`: Detailed view showing "Have" vs "Missing" status for every ingredient.
+* `AddRecipeDialog.java`: Interface for extending the recipe database via GUI.
 
+## 📝 Recipe Data Format
 
-## 🎨 UI Preview
+The application expects a CSV format with three specific columns: `Menu_name`, `URL`, and `Ingredients`.
 
-The GUI features a professional **Orange Theme** designed for clarity:
-* **Recipe Cards**: Display match ratios (e.g., 3/5 ingredients) and missing items.
-* **Interactive Dialogs**: Checklists showing "Have" vs "Missing" status for every ingredient.
-
-
-## 📜 License
-This project is open-source. Feel free to use and modify it for your personal use!
+**Example Entry:**
+```csv
+Tomato_Egg_Fried_Rice, [https://example.com/recipe](https://example.com/recipe), tomato,egg,rice
